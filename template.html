@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>模板原理</title>
+  <style>
+    table {
+      width: 300px;
+      height: 200px;
+      border: 1px solid red;
+    }
+  </style>
+</head>
+
+<body>
+  <table>
+
+  </table>
+  <script type="text/html" id="templateId" >
+    <tr>
+      <td><%=name%></td>
+      <td><%=area%></td>
+      <td><%=person%></td>
+    </tr>
+  </script>
+  <script>
+    function template(templateId,data) {
+      var templateid = document.querySelector('#'+templateId);
+      //获取整个templateId中的内容
+      var tplStr = templateid.innerHTML;
+      var reg = /<%=\s*([^%>]+\S)\s*%>/; //匹配<%=%> 去掉=，result[1]的取值是 =name
+      var result = reg.exec(tplStr);
+      while(result = reg.exec(tplStr)){
+        var key = result[0];
+        var value = result[1];
+        console.log(value);
+        tplStr = tplStr.replace(key,data[value]);
+        console.log(key,data[value]);
+      }
+      return tplStr;
+    };
+    
+    var obj = [
+	{
+        name: '鹿晗',
+        area: '北京',
+        person: '足球'
+      },
+	{
+        name: '宋仲基',
+        area: '韩国首尔',
+        person: '宋慧乔'
+      }
+      
+    ];
+    
+    var html='';
+    for(var i = 0;i<obj.length;i++){
+      html +=  template('templateId',obj[i]); //id以字符串的形式传入
+    }
+    var tables = document.querySelector('table');
+    tables.innerHTML = html;
+
+  </script>
+</body>
+
+</html>

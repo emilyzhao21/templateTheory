@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <script>
+    //会用正则表达式，exec判断,匹配返回数组，否则返回null，然后replace进行替换
+    // 使用 正则 获取 其中的 这两个地方
+    //  最开始 匹配的是 <%=
+    //  \s* 可以有 0-多个 空白符号
+    //  () 查找 满足 小括号中 条件的 文本
+    //  [^%>]+\S   ^%> 除了 %> 以外的 所有字符 至少一个
+    //  \s* 0-多个
+    //  以%> 作为结束
+    //  // 快速 创建 正则 验证对象
+    var strTpl = "我是<%=name%>,我来自<%=area%>,我喜欢<%=person%>";
+    //['<%=name%>','name']
+    var obj = {
+        name: '鹿晗',
+        area: '北京',
+        person: '足球'
+    };
+
+    /* var resultStr = result[0];
+    var resultName = result[1];
+    strTpl = strTpl.replace(resultStr,obj[resultName]);
+    console.log(strTpl);
+    result = reg.exec(strTpl);
+    resultStr = result[0];
+    resultName = result[1];
+    strTpl = strTpl.replace(resultStr,obj[resultName]);
+    console.log(strTpl);
+    result = reg.exec(strTpl);
+    resultStr = result[0];
+    resultName = result[1];
+    strTpl = strTpl.replace(resultStr,obj[resultName]);
+    console.log(strTpl); */
+
+    // 使用函数封装,传入字符串和数据对象
+    function template(strTpl, obj) {
+      var reg = /<%=\s*([^%>]+\S)\s*%>/;
+      var result = reg.exec(strTpl); //exec检索字符串，若存在以数组的形式返回
+      //while循环，检索字符串，如果exec返回null，则说明没有匹配项
+      while (result = reg.exec(strTpl)) { //只判断result的话，是个常量，一直未true是死循环，可以将result写在里面，判断result
+        var resultStr = result[0];
+        var resultName = result[1];
+        strTpl = strTpl.replace(resultStr, obj[resultName]);
+      }
+      return strTpl;
+    }
+    console.log(template(strTpl,obj));
+  </script>
+</body>
+
+</html>
